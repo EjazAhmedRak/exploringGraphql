@@ -23,8 +23,8 @@ func init() {
 		{
 			Query: `
 				query UserNameQuery {
-					user(id:"01610666-2c23-49ad-8a8c-5d44f1b1bd5a"){
-						name, id
+					user(uuid:"6fa1b5af-f751-422e-a578-09fff549fe48"){
+						name, uuid, email
 					}
 				}
 			`,
@@ -32,8 +32,9 @@ func init() {
 			Expected: &graphql.Result{
 				Data: map[string]interface{}{
 					"user": map[string]interface{}{
-						"name": "Accessers15",
-						"id":   "01610666-2c23-49ad-8a8c-5d44f1b1bd5a",
+						"name": "KALU RAM", 
+						"email" :"kaluram@saathindustani.com",
+						"uuid":   "6fa1b5af-f751-422e-a578-09fff549fe48",
 					},
 				},
 			},

@@ -29,7 +29,7 @@ func ExecuteQuery(query string, schema graphql.Schema) *graphql.Result {
 		RequestString: query,
 	})
 	if len(result.Errors) > 0 {
-		fmt.Printf("wrong result, unexoected errors: %v", result.Errors)
+		fmt.Printf("wrong result, unexpected errors: %v", result.Errors)
 	}
 	return result
 }
@@ -42,7 +42,7 @@ var QueryType = graphql.NewObject(
 			"user": &graphql.Field{
 				Type: graphqltypes.UserType,
 				Args: graphql.FieldConfigArgument{
-					"id": &graphql.ArgumentConfig{
+					"uuid": &graphql.ArgumentConfig{
 						Type: graphql.String,
 					},
 				},
@@ -53,21 +53,12 @@ var QueryType = graphql.NewObject(
 )
 
 var idqueryresolver = func(p graphql.ResolveParams) (interface{}, error) {
-	var users []graphqlstructs.User
-	idQuery, isOk := p.Args["id"].(string)
+	idQuery, isOk := p.Args["uuid"].(string)
 	if isOk {
-		rows, dberr := Db.Raw("SELECT user_uuid as id, adfs_name_id as email, rid_last_name as name FROM users_tbl WHERE user_uuid = ?", idQuery).Rows()
-		if dberr != nil {
-			return nil, dberr
-		}
-		for rows.Next() {
-			// ScanRows scan a row into user
-			var user graphqlstructs.User
-			Db.ScanRows(rows, &user)
-			// do something
-			users = append(users, user)
-		}
-		return users[0], nil
+		searchParam := graphqlstructs.User{ UUID: idQuery}
+		user := graphqlstructs.User{}
+		Db.Where(&searchParam).Find(&user)
+		return user, nil
 	}
 	return nil, nil
 }
