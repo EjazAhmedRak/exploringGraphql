@@ -45,14 +45,17 @@ var QueryType = graphql.NewObject(
 					"uuid": &graphql.ArgumentConfig{
 						Type: graphql.String,
 					},
+					"email": &graphql.ArgumentConfig{
+						Type: graphql.String,
+					},
 				},
-				Resolve: idqueryresolver,
+				Resolve: userqueryresolver,
 			},
 		},
 	},
 )
 
-var idqueryresolver = func(p graphql.ResolveParams) (interface{}, error) {
+var userqueryresolver = func(p graphql.ResolveParams) (interface{}, error) {
 	idQuery, isOk := p.Args["uuid"].(string)
 	if isOk {
 		searchParam := graphqlstructs.User{ UUID: idQuery}

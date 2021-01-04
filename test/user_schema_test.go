@@ -39,6 +39,33 @@ func init() {
 				},
 			},
 		},
+		{
+			Query: `
+				query UserNameQuery {
+					user(uuid:"6fa1b5af-f751-422e-a578-09fff549fe48"){
+						name,
+						uuid,
+						email,
+						accesses{
+							uuid
+						}
+					}
+				}
+			`,
+			Schema: graphqlexecutor.Schema,
+			Expected: &graphql.Result{
+				Data: map[string]interface{}{
+					"user": map[string]interface{}{
+						"name": "KALU RAM", 
+						"email" :"kaluram@saathindustani.com",
+						"uuid":   "6fa1b5af-f751-422e-a578-09fff549fe48",
+						"accesses": []map[string]interface{}{
+							{"uuid" : "6fa1b5af-f751-422e-a578-09fff549fe48",},
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
